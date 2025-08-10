@@ -95,15 +95,16 @@ export class YoutubeResource extends Resource<ResourceData> {
   }
 
   static async stream(track: ITrackData) {
-    return ytdl(track.url, { filter: 'audioonly', dlChunkSize: 0 });
+    // Delegate to base implementation that uses yt-dlp for stability
+    return Resource.stream(track);
   }
 
-  isPlaylist() {
+  isPlaylist(): this is IResourceBase<true, IPlaylistData> {
     if (!this._data) return false;
     return isPlaylist(this.url);
   }
 
-  isTrack() {
+  isTrack(): this is IResourceBase<true, ITrackData> {
     if (!this._data) return false;
     return !isPlaylist(this.url);
   }
