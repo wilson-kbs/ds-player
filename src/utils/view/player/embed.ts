@@ -71,7 +71,7 @@ export function playerEmbed(options?: EmbedOptions) {
 
     primary.setURL(url);
 
-    if (thumbnail) primary.setThumbnail(thumbnail);
+    primary.setThumbnail(thumbnail ?? DEFAULT_THUMBNAIL);
 
     primary.setDescription(timeProgressBar(currentTime, duration));
   } else {
@@ -81,7 +81,7 @@ export function playerEmbed(options?: EmbedOptions) {
 
   if (options && options.nextTracks?.length) {
     response.push(new EmbedBuilder());
-    const [_, queue] = response;
+    const [, queue] = response;
 
     const data = options.nextTracks.map((title) => `- ${title}`);
     queue.addFields({
