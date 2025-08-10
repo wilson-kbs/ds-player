@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { channelMention } from '@discordjs/builders';
+import { ButtonStyle } from 'discord.js';
 
 import { HandleButton, Handler } from 'core/decorators';
 
@@ -69,13 +70,13 @@ export class ViewHandler {
     let newRepeatState: PlayerRepeat;
 
     switch (req.raw.component.style) {
-      case 'SUCCESS':
+      case ButtonStyle.Success:
         newRepeatState = PlayerRepeat.None;
         break;
-      case 'PRIMARY':
+      case ButtonStyle.Primary:
         newRepeatState = PlayerRepeat.One;
         break;
-      case 'SECONDARY':
+      case ButtonStyle.Secondary:
         newRepeatState = PlayerRepeat.All;
         break;
       default:
