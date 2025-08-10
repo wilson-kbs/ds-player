@@ -1,6 +1,7 @@
-FROM node:20-bullseye AS builder
+FROM node:22-bookworm AS builder
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends build-essential autoconf automake python3 make ffmpeg libtool ca-certificates \
+  && apt-get install -y --no-install-recommends build-essential autoconf automake python3 make ffmpeg libtool libtool-bin ca-certificates \
+  && ln -sf python3 /usr/bin/python \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -22,10 +23,11 @@ RUN npm run build
 
 
 
-FROM node:20-bullseye
+FROM node:22-bookworm
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ffmpeg python3 ca-certificates \
+  && apt-get install -y --no-install-recommends ffmpeg python3 ca-certificates wget \
+  && ln -sf python3 /usr/bin/python \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
