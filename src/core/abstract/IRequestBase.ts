@@ -4,10 +4,8 @@ export abstract class IRequestBase<Req extends Interaction = Interaction> {
   protected constructor(public readonly raw: Req) {}
 
   get defer() {
-    return (
-      (this.raw.isChatInputCommand() || this.raw.isButton()) &&
+    return (this.raw.isChatInputCommand() || this.raw.isButton()) &&
       !this.raw.deferred
-    )
       ? this.raw.deferReply({ ephemeral: true })
       : undefined;
   }

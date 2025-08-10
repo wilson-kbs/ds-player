@@ -45,8 +45,10 @@ export class InteractionRouter {
     let res: any;
 
     try {
-      if (interaction.isChatInputCommand() &&
-          interaction instanceof ChatInputCommandInteraction) {
+      if (
+        interaction.isChatInputCommand() &&
+        interaction instanceof ChatInputCommandInteraction
+      ) {
         res = await this._handleCommand(
           (req = new CommandRequest(interaction)),
         );

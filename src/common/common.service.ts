@@ -1,11 +1,6 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  Client,
-  Collection,
-  GatewayIntentBits,
-  ChannelType,
-} from 'discord.js';
+import { Client, Collection, GatewayIntentBits, ChannelType } from 'discord.js';
 
 import type { Worker } from 'core/Worker';
 

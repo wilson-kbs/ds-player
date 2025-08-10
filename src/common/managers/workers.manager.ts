@@ -39,10 +39,7 @@ export class WorkersManager {
 
     for (const token of [...new Set(workersTokens)]) {
       const workerClient = new Client({
-        intents: [
-          GatewayIntentBits.Guilds,
-          GatewayIntentBits.GuildVoiceStates,
-        ],
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates],
       });
 
       try {
