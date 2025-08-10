@@ -1,5 +1,5 @@
 import { codeBlock } from '@discordjs/builders';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import { EmbedOptions } from './embed.types';
 
 const DEFAULT_THUMBNAIL =
@@ -56,7 +56,7 @@ function timeProgressBar(start?: number, end?: number) {
 }
 
 export function playerEmbed(options?: EmbedOptions) {
-  const response = [new MessageEmbed()];
+  const response = [new EmbedBuilder()];
   const [primary] = response;
 
   // primary.setColor('RANDOM');
@@ -80,11 +80,15 @@ export function playerEmbed(options?: EmbedOptions) {
   }
 
   if (options && options.nextTracks?.length) {
-    response.push(new MessageEmbed());
+    response.push(new EmbedBuilder());
     const [_, queue] = response;
 
     const data = options.nextTracks.map((title) => `- ${title}`);
-    queue.addField('next tracks', codeBlock(data.join('\n')), true);
+    queue.addFields({
+      name: 'next tracks',
+      value: codeBlock(data.join('\n')),
+      inline: true,
+    });
   }
 
   return response;

@@ -1,41 +1,41 @@
-import { MessageButton } from 'discord.js';
+import { ButtonBuilder, ButtonStyle } from 'discord.js';
 
 export function playButton(playerId: string, disable = false) {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`play:${playerId}`)
-    .setStyle('PRIMARY')
+    .setStyle(ButtonStyle.Primary)
     .setLabel('▶')
     .setDisabled(disable);
 }
 
 export function pauseButton(playerId: string, disable = false) {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`pause:${playerId}`)
-    .setStyle('SUCCESS')
+    .setStyle(ButtonStyle.Success)
     .setLabel('⏸')
     .setDisabled(disable);
 }
 
 export function nextButton(playerId: string, disable = false) {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`next:${playerId}`)
-    .setStyle('SECONDARY')
+    .setStyle(ButtonStyle.Secondary)
     .setLabel('⏩')
     .setDisabled(disable);
 }
 
 export function previousButton(playerId: string, disable = false) {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`previous:${playerId}`)
-    .setStyle('SECONDARY')
+    .setStyle(ButtonStyle.Secondary)
     .setLabel('⏪')
     .setDisabled(disable);
 }
 
 export function stopButton(playerId: string, disable = false) {
-  return new MessageButton()
+  return new ButtonBuilder()
     .setCustomId(`stop:${playerId}`)
-    .setStyle('DANGER')
+    .setStyle(ButtonStyle.Danger)
     .setLabel('⏹')
     .setDisabled(disable);
 }
@@ -47,21 +47,21 @@ export function repeatButton(
 ) {
   switch (state) {
     case 'one':
-      return new MessageButton()
+      return new ButtonBuilder()
         .setCustomId(`repeat:${playerId}`)
-        .setStyle('SUCCESS')
+        .setStyle(ButtonStyle.Success)
         .setLabel('🔂')
         .setDisabled(disable);
     case 'all':
-      return new MessageButton()
+      return new ButtonBuilder()
         .setCustomId(`repeat:${playerId}`)
-        .setStyle('PRIMARY')
+        .setStyle(ButtonStyle.Primary)
         .setLabel('🔁')
         .setDisabled(disable);
     default:
-      return new MessageButton()
+      return new ButtonBuilder()
         .setCustomId(`repeat:${playerId}`)
-        .setStyle('SECONDARY')
+        .setStyle(ButtonStyle.Secondary)
         .setLabel('🔁')
         .setDisabled(disable);
   }

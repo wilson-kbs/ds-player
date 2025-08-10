@@ -1,6 +1,6 @@
 import { PlayerState } from 'core/player/Player';
 import { playerEmbed } from './embed';
-import { MessageActionRow } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
 import {
   nextButton,
   pauseButton,
@@ -43,7 +43,7 @@ function getPlayerButtons(
   repeat: 'none' | 'all' | 'one',
   disabled = false,
 ) {
-  return new MessageActionRow().setComponents(
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(
     previousButton(payload, disabled), // disabled for development
     playing ? pauseButton(payload, disabled) : playButton(payload, disabled),
     nextButton(payload, disabled), // disabled for development
@@ -53,7 +53,7 @@ function getPlayerButtons(
 }
 
 export function disabledButtons() {
-  return new MessageActionRow().setComponents(
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(
     previousButton('', true),
     playButton('', true),
     nextButton('', true),
