@@ -1,4 +1,8 @@
-import { ButtonInteraction, CommandInteraction, Interaction } from 'discord.js';
+import {
+  ButtonInteraction,
+  ChatInputCommandInteraction,
+  Interaction,
+} from 'discord.js';
 
 import { HandleStore } from 'core/store/HandleStore';
 import { IRequestBase } from 'core/abstract/IRequestBase';
@@ -41,10 +45,8 @@ export class InteractionRouter {
     let res: any;
 
     try {
-      if (
-        interaction.isCommand() &&
-        interaction instanceof CommandInteraction
-      ) {
+      if (interaction.isChatInputCommand() &&
+          interaction instanceof ChatInputCommandInteraction) {
         res = await this._handleCommand(
           (req = new CommandRequest(interaction)),
         );

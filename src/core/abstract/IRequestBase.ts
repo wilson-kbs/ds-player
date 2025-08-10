@@ -4,7 +4,10 @@ export abstract class IRequestBase<Req extends Interaction = Interaction> {
   protected constructor(public readonly raw: Req) {}
 
   get defer() {
-    return (this.raw.isCommand() || this.raw.isButton()) && !this.raw.deferred
+    return (
+      (this.raw.isChatInputCommand() || this.raw.isButton()) &&
+      !this.raw.deferred
+    )
       ? this.raw.deferReply({ ephemeral: true })
       : undefined;
   }
@@ -27,7 +30,7 @@ export abstract class IRequestBase<Req extends Interaction = Interaction> {
 
   private async _send(content: string, ephemeral = true) {
     const { raw } = this;
-    if (raw.isCommand() || raw.isButton()) {
+    if (raw.isChatInputCommand() || raw.isButton()) {
       if (raw.replied || raw.deferred)
         await raw.followUp({ content, ephemeral });
       else await raw.reply({ content, ephemeral });

@@ -1,9 +1,9 @@
-import { CommandInteraction } from 'discord.js';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 import { IRequestBase } from '../abstract/IRequestBase';
 
-export class CommandRequest extends IRequestBase<CommandInteraction> {
-  constructor(req: CommandInteraction) {
+export class CommandRequest extends IRequestBase<ChatInputCommandInteraction> {
+  constructor(req: ChatInputCommandInteraction) {
     super(req);
   }
 
