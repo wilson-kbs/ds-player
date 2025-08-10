@@ -13,8 +13,9 @@ import WritableStream = NodeJS.WritableStream;
 
 const YouTubeDl = YouTubeDlCreate('yt-dlp');
 
+// Prefer direct HTTP audio URLs; avoid HLS/DASH when possible
 const YOUTUBE_DL_FORMAT =
-  'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio/worstaudio/worst';
+  'ba[ext=webm][acodec=opus][protocol^=http]/ba[ext=m4a][protocol^=http]/ba[protocol^=http]/best[protocol^=http]';
 
 export async function getMetadata<T>(url: string): Promise<T> {
   return <T>(<unknown>await YouTubeDl(url, {
@@ -105,7 +106,8 @@ export async function getFormatURL(url: string): Promise<string> {
     format: YOUTUBE_DL_FORMAT,
   });
 
-  const formatURL = stdout.trim();
+  const data = typeof stdout === 'string' ? stdout : await readStream(stdout);
+  const formatURL = data.trim();
   if (!formatURL) throw new Error('format url not found');
 
   try {
@@ -114,6 +116,15 @@ export async function getFormatURL(url: string): Promise<string> {
   } catch {
     throw new Error('video format is not url');
   }
+}
+
+async function readStream(readable: Readable | undefined): Promise<string> {
+  if (!readable) return '';
+  const chunks: Buffer[] = [];
+  for await (const chunk of readable) {
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+  }
+  return Buffer.concat(chunks).toString('utf8');
 }
 
 function pipeStream(url: string, dest: WritableStream) {
