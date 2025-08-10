@@ -1,9 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import {
-  ChannelType,
-  Collection,
-  PermissionFlagsBits,
-} from 'discord.js';
+import { ChannelType, Collection, PermissionFlagsBits } from 'discord.js';
 
 import { CommonService } from '../common.service';
 import { Voice, VoiceState } from 'core/player/Voice';
@@ -161,7 +157,7 @@ export class VoicesManager extends TypedEmitter<VoiceManagerEvents> {
     this.emit('stateChange', oldState, newState);
   };
 
-  private _onVoiceStateChangeInMainClient = (...any: any[]) => {
-    // console.log('MAIN CLIENT voice CHANGE STATE !!!! ------', any);
+  private _onVoiceStateChangeInMainClient = () => {
+    // console.log('MAIN CLIENT voice CHANGE STATE !!!! ------', _args);
   };
 }
