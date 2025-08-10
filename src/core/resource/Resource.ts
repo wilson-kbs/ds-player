@@ -8,7 +8,7 @@ import {
   getMetadata,
   getStream,
 } from './ResourceUtil';
-import { If } from 'discord.js';
+import { If } from 'core/types/If';
 import { PlatformType } from '../enums/PlatformType';
 import { Readable } from 'stream';
 

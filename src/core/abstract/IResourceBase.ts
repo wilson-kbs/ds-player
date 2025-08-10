@@ -1,4 +1,4 @@
-import { If } from 'discord.js';
+import { If } from 'core/types/If';
 
 import { IPlaylistData } from '../entities/IPlaylistData';
 import { ITrackData } from '../entities/ITrackData';

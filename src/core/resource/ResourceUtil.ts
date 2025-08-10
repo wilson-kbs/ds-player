@@ -11,7 +11,7 @@ import http, { ClientRequest, IncomingMessage } from 'http';
 import https from 'https';
 import WritableStream = NodeJS.WritableStream;
 
-const YouTubeDl = YouTubeDlCreate('youtube-dl');
+const YouTubeDl = YouTubeDlCreate('yt-dlp');
 
 const YOUTUBE_DL_FORMAT =
   'bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio/worstaudio/worst';
