@@ -4,13 +4,13 @@ function RepeatModeOptions(schema: SlashCommandBuilder) {
   schema.addStringOption((input) =>
     input
       .setName('mode')
-      .setDescription('Choice repeat mode : [all, one, none]. (default: none)')
+      .setDescription('Choice repeat mode: all | one | none (default: none)')
       .setRequired(true)
-      .setChoices([
-        ['all', 'all'],
-        ['one', 'one'],
-        ['none', 'none'],
-      ]),
+      .addChoices(
+        { name: 'all', value: 'all' },
+        { name: 'one', value: 'one' },
+        { name: 'none', value: 'none' },
+      ),
   );
 }
 
