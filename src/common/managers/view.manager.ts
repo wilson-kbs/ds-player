@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Collection } from 'discord.js';
+import { Collection, TextBasedChannel } from 'discord.js';
 
 import { PlayerManager } from './player.manager';
 import { CommonService } from '../common.service';
@@ -25,15 +25,17 @@ export class ViewManager {
 
     const channel = await this.coreService.client.channels.fetch(channelId);
     if (!channel) throw new Error('no found channel');
-    // Ensure channel supports sending messages
-    if (
-      !(typeof (channel as any).send === 'function' ||
-        (typeof (channel as any).isTextBased === 'function' &&
-          (channel as any).isTextBased()))
-    )
+    // ensure text-capable channel with a send method
+    const hasSend = (c: unknown): c is TextBasedChannel & { send: Function } =>
+      !!c && typeof (c as any).send === 'function';
+    if (!('isTextBased' in channel) || !channel.isTextBased() || !hasSend(channel))
       throw new Error('is not a text channel');
 
-    const message = await channel.send(playerViewMessageResponse(player.state));
+    const message = await (channel as unknown as TextBasedChannel & {
+      send: Function;
+    }).send(
+      playerViewMessageResponse(player.state),
+    );
 
     const view = new View(
       this.coreService,
