@@ -1,6 +1,11 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client, Collection } from 'discord.js';
+import {
+  Client,
+  Collection,
+  GatewayIntentBits,
+  ChannelType,
+} from 'discord.js';
 
 import type { Worker } from 'core/Worker';
 
@@ -11,10 +16,10 @@ export class CommonService implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {
     this._client = new Client<boolean>({
       intents: [
-        'GUILDS',
-        'GUILD_VOICE_STATES',
-        'GUILD_MEMBERS',
-        'GUILD_INTEGRATIONS',
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMembers,
+        GatewayIntentBits.GuildIntegrations,
       ],
     });
   }
@@ -50,7 +55,11 @@ export class CommonService implements OnModuleInit {
   async isVoiceChannel(channelId: string) {
     try {
       const channel = await this.client.channels.fetch(channelId);
-      return channel.isVoice();
+      return (
+        !!channel &&
+        (channel.type === ChannelType.GuildVoice ||
+          channel.type === ChannelType.GuildStageVoice)
+      );
     } catch (_) {
       return false;
     }

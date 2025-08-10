@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Collection } from 'discord.js';
+import { ChannelType, Collection } from 'discord.js';
 
 import { CommonService } from '../common.service';
 import { Player } from 'core/player/Player';
@@ -30,7 +30,12 @@ export class PlayerManager {
       throw new Error('is not voice channel');
 
     const channel = await this.core.client.channels.fetch(channelId);
-    if (!channel.isVoice()) return;
+    if (
+      !channel ||
+      (channel.type !== ChannelType.GuildVoice &&
+        channel.type !== ChannelType.GuildStageVoice)
+    )
+      return;
 
     const player = new Player({
       id: channel.id,

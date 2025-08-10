@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Client, Collection } from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
 
 import { CommonService } from '../common.service';
 import { Worker } from 'core/Worker';
@@ -32,13 +32,17 @@ export class WorkersManager {
         .get<string>('KSPLAYER_WORKERS_TOKENS')
         ?.trim()
         .replaceAll('"', '')
-        .split(',') ?? [];
+        .split(',')
+        .map((token) => token.trim()) ?? [];
 
     let count = 1;
 
     for (const token of [...new Set(workersTokens)]) {
       const workerClient = new Client({
-        intents: ['GUILDS', 'GUILD_VOICE_STATES'],
+        intents: [
+          GatewayIntentBits.Guilds,
+          GatewayIntentBits.GuildVoiceStates,
+        ],
       });
 
       try {

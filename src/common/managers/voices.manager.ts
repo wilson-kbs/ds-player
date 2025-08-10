@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Collection } from 'discord.js';
+import {
+  ChannelType,
+  Collection,
+  PermissionFlagsBits,
+} from 'discord.js';
 
 import { CommonService } from '../common.service';
 import { Voice, VoiceState } from 'core/player/Voice';
 import { WorkersManager } from './workers.manager';
 import { Worker } from 'core/Worker';
 import { VoiceStatus } from 'core/enums/VoiceStatus';
-import { SnowflakeUtil } from 'discord.js';
+import { SnowflakeUtil } from 'utils/SnowflakeUtil';
 import { TypedEmitter } from 'tiny-typed-emitter';
 import { joinVoiceChannel } from '@discordjs/voice';
 
@@ -48,7 +52,12 @@ export class VoicesManager extends TypedEmitter<VoiceManagerEvents> {
 
   private async _newVoice(channelId: string) {
     const channel = await this.client.channels.fetch(channelId);
-    if (!channel.isVoice()) throw new Error('is not voice channel');
+    if (
+      !channel ||
+      (channel.type !== ChannelType.GuildVoice &&
+        channel.type !== ChannelType.GuildStageVoice)
+    )
+      throw new Error('is not voice channel');
 
     const availableWorkers = await this._getAvailableWorkers(channel.guildId);
     if (!availableWorkers.length) throw new Error('no available worker');
@@ -57,8 +66,8 @@ export class VoicesManager extends TypedEmitter<VoiceManagerEvents> {
 
     for (const availableWorker of availableWorkers) {
       const permission = channel.permissionsFor(availableWorker.id);
-      if (!permission.has('CONNECT')) continue;
-      if (!permission.has('SPEAK')) continue;
+      if (!permission?.has(PermissionFlagsBits.Connect)) continue;
+      if (!permission?.has(PermissionFlagsBits.Speak)) continue;
       worker = availableWorker;
     }
 
@@ -131,7 +140,11 @@ export class VoicesManager extends TypedEmitter<VoiceManagerEvents> {
       const newChannel = await newState.voice.worker.raw.channels.fetch(
         newState.channelId,
       );
-      if (newChannel.isVoice()) {
+      if (
+        newChannel &&
+        (newChannel.type === ChannelType.GuildVoice ||
+          newChannel.type === ChannelType.GuildStageVoice)
+      ) {
         const workersIds = Array.from(this.coreService.workers.keys());
 
         const allBotInChannel = newChannel.members.filter(
