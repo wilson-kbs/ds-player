@@ -1,3 +1,3 @@
 rm -rf ./dist
-yarn
-yarn start:dev
+if [ -f package-lock.json ]; then npm ci; else npm install; fi
+npm run start:dev

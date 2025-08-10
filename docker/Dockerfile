@@ -1,29 +1,32 @@
-FROM node:16-alpine AS builder
-RUN apk add --update --no-cache alpine-sdk autoconf automake  python3 make ffmpeg libtool
-RUN ln -sf python3 /usr/bin/python
-RUN yarn global add node-gyp
+FROM node:20-bullseye AS builder
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends build-essential autoconf automake python3 make ffmpeg libtool ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY ./package.json ./
-COPY ./yarn.lock ./
+# Yarn lock removed; npm will use package-lock.json if present
+# COPY ./yarn.lock ./
 
 ENV YOUTUBE_DL_SKIP_DOWNLOAD=true
-RUN yarn
+# Prefer npm ci if package-lock.json exists; fallback to npm install
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY . .
-RUN yarn build
+RUN npm run build
 
 #RUN rm -rf ./node_modules
-#RUN yarn install -prod
+#RUN npm ci --omit=dev
 
-RUN wget https://yt-dl.org/downloads/latest/youtube-dl -O ./youtube-dl
+# Removed youtube-dl download; yt-dlp will be installed in the final stage
 
 
 
-FROM node:16-alpine
+FROM node:20-bullseye
 
-RUN apk add --update --no-cache ffmpeg python3
-RUN ln -sf python3 /usr/bin/python
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ffmpeg python3 ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -31,12 +34,12 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/youtube-dl /usr/local/bin/youtube-dl
+RUN wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -O /usr/local/bin/yt-dlp
 
-RUN chmod a+rx /usr/local/bin/youtube-dl
+RUN chmod a+rx /usr/local/bin/yt-dlp
 
 VOLUME /data
 
 EXPOSE 3000
 
-CMD ["yarn", "run", "start:prod"]
+CMD ["npm", "run", "start:prod"]

@@ -32,7 +32,16 @@ clean_repo:
 	rm -rf ./dist ./node_modules
 
 sh:
+	@echo "[DEPRECATED] Use 'make shell' instead of 'make sh'." 1>&2
 	docker exec $(dev_name) $(call args)
+
+# Convenience: ensure dev container is up (detached)
+up:
+	bash scripts/dev_up.sh $(call args)
+
+# Convenience: open a shell or run a command in dev container
+shell:
+	bash scripts/dev_shell.sh $(call args)
 
 %:
 	@:
