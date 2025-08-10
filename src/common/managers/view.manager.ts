@@ -25,15 +25,10 @@ export class ViewManager {
 
     const channel = await this.coreService.client.channels.fetch(channelId);
     if (!channel) throw new Error('no found channel');
-    // ensure text-capable channel with a send method
-    const hasSend = (c: unknown): c is TextBasedChannel & { send: Function } =>
-      !!c && typeof (c as any).send === 'function';
-    if (!('isTextBased' in channel) || !channel.isTextBased() || !hasSend(channel))
+    if (!('isTextBased' in channel) || !channel.isTextBased())
       throw new Error('is not a text channel');
 
-    const message = await (channel as unknown as TextBasedChannel & {
-      send: Function;
-    }).send(
+    const message = await (channel as TextBasedChannel).send(
       playerViewMessageResponse(player.state),
     );
 
