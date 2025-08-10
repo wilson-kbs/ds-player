@@ -5,13 +5,13 @@ import { IWorkerRuntime } from 'core/abstract/IWorkerRuntime';
 import { CommonService } from 'common/common.service';
 
 export class Worker extends IWorkerRuntime {
-  constructor(public readonly core: CommonService, client: Client) {
+  constructor(public readonly core: CommonService, client: Client<true>) {
     super(client);
     core.registerWorker(this);
   }
 
   public get client() {
-    return this.core.client;
+    return this.core.client as Client<true>;
   }
 
   async inGuild(guildId: string): Promise<boolean> {

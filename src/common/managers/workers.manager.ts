@@ -57,13 +57,13 @@ export class WorkersManager {
       }
       this._workers.set(
         workerClient.user.id,
-        new Worker(this.coreService, workerClient),
+        new Worker(this.coreService, workerClient as any),
       );
       count++;
     }
     this._workers.set(
       this.client.user.id,
-      new Worker(this.coreService, this.client),
+      new Worker(this.coreService, this.client as any),
     );
     console.log(`worker ${this.client.user.tag} loaded!`);
   }
