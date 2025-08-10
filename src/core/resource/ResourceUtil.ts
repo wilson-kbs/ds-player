@@ -9,7 +9,7 @@ import { PlatformType } from '../enums/PlatformType';
 import { BaseResourcePlaylist, BaseResourceTrack } from './ResourceType';
 import http, { ClientRequest, IncomingMessage } from 'http';
 import https from 'https';
-import WritableStream = NodeJS.WritableStream;
+// (unused after refactor) — removed
 
 const YouTubeDl = YouTubeDlCreate('yt-dlp');
 
@@ -125,19 +125,6 @@ async function readStream(readable: Readable | undefined): Promise<string> {
     chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   }
   return Buffer.concat(chunks).toString('utf8');
-}
-
-function pipeStream(url: string, dest: WritableStream) {
-  let req: ClientRequest;
-
-  const pipe = (data) => {
-    data.pipe(dest);
-  };
-
-  switch (new URL(url).protocol) {
-    case 'https:':
-      req = https.get(url);
-  }
 }
 
 const pipe = (stream: PassThrough) => (data: IncomingMessage) => {
